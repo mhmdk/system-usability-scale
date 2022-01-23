@@ -1,5 +1,7 @@
 package usability.scale.system.spring.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,12 +23,13 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class SusController {
-
+    private static final Logger logger = LoggerFactory.getLogger(SusController.class);
     @Autowired
     SusService susService;
 
     @GetMapping({"/", "/index"})
     String index(@ModelAttribute Answers answers, Model model, HttpServletRequest request) {
+        logger.debug("request to main page received");
         model.addAttribute("questions", Questions.ALL);
         model.addAttribute("choices", AnswerChoice.values());
 
@@ -40,8 +43,10 @@ public class SusController {
 
     @PostMapping("/submit")
     String submit(@ModelAttribute Answers answers, Model model, HttpServletRequest request) {
+        logger.debug("a form has been submitted with the following content: {}", answers);
         HttpSession session = request.getSession(false);
         if (session == null) {
+            logger.info("a submission with an invalid session was received");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid session, or session has submitted an answer before.Please visit the main page to create a new valid session");
         } else {
             //a session can submit only once
@@ -57,6 +62,8 @@ public class SusController {
 
     @GetMapping("/statistics")
     String globalStatistics(Model model) {
+        logger.debug("request to statistics page received");
+
         model.addAttribute("allScores", susService.getAllScores());
         model.addAttribute("allScoresAverage", susService.getAllTimeAverage());
         model.addAttribute("hourlyScore", susService.getHourlyScore());
@@ -73,5 +80,4 @@ public class SusController {
         response.setStatus(exception.getRawStatusCode());
         return "custom-error";
     }
-
 }

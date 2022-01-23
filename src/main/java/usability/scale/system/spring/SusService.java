@@ -1,5 +1,7 @@
 package usability.scale.system.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import usability.scale.system.calculator.DefaultInstantProvider;
@@ -14,7 +16,7 @@ import java.util.OptionalDouble;
 
 @Service
 public class SusService {
-
+    private static final Logger logger = LoggerFactory.getLogger(SusService.class);
     private final ScoreRepository scoreRepository;
     private final InstantProvider instantProvider = new DefaultInstantProvider();
     private final AverageScoreCalculators averageScoreCalculators;
@@ -47,6 +49,7 @@ public class SusService {
 
     public void addScore(double value) {
         Score score = new Score(value, Date.from(instantProvider.now()));
+        logger.info("a new score was calculated: {}", score);
         scoreRepository.addScore(score);
         averageScoreCalculators.addScore(score);
     }
