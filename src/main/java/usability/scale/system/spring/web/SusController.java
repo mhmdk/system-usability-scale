@@ -40,11 +40,6 @@ public class SusController {
 
     @PostMapping("/submit")
     String submit(@ModelAttribute Answers answers, Model model, HttpServletRequest request) {
-        double result = new ScoreCalculator().calculateScore(answers);
-        susService.addScore(result);
-
-        model.addAttribute("score", result);
-
         HttpSession session = request.getSession(false);
         if (session == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid session, or session has submitted an answer before.Please visit the main page to create a new valid session");
@@ -53,6 +48,10 @@ public class SusController {
             session.invalidate();
         }
 
+        double result = new ScoreCalculator().calculateScore(answers);
+        susService.addScore(result);
+
+        model.addAttribute("score", result);
         return "score";
     }
 
