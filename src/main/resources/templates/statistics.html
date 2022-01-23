@@ -1,0 +1,42 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Global Statistics</title>
+</head>
+<body>
+
+<h1>
+    <p th:text="'all time average: ' + ${allScoresAverage}"></p>
+    <p th:text="'hourly score: ' + ${hourlyScore}"></p>
+    <p th:text="'daily score: ' + ${dailyScore}"></p>
+    <p th:text="'weekly score: ' + ${weeklyScore}"></p>
+    <p th:text="'monthly score: ' + ${monthlyScore}"></p>
+    <p>Scores :</p>
+</h1>
+
+<style>
+
+th, td {
+border: 1px solid black;
+text-align:center;
+}
+
+
+</style>
+
+<table style="text-align:center; border: 1px solid black; width: 100%">
+    <tr>
+        <th>Date</th>
+        <th>Score</th>
+    </tr>
+    <tr th:each="score : ${allScores}">
+        <td th:text="${#dates.format(score.submissionDate, 'dd/MM/yyyy HH:mm')}"></td>
+        <td th:text="${score.value}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Usability Scale</title>
+</head>
+<body>
+<p>Please answer the questions below:</p>
+
+<form action="#" th:action="@{/submit}" th:object="${answers}" method="post">
+    <div>
+        <ol>
+            <li th:each="question, questionStat : ${questions}">
+                <p th:text="${question}"></p>
+                <ul style="list-style: none;">
+                    <li th:each="choice : ${choices}">
+                        <input type="radio" th:id="${#ids.seq('answers')}"
+                               th:field="${answers.answers[__${questionStat.index}__]}"
+                               th:value="${choice}"/>
+                        <label th:for="${#ids.prev('answers')}" th:text="${choice.description}"></label>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div>
+        <button type="submit">Compute</button>
+    </div>
+
+</form>
+
+</body>
+</html>
